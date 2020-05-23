@@ -9,3 +9,7 @@ $ docker-compose build && docker-compose up -d nats && docker-compose up -d db &
 ```
 $ docker-compose down
 ```
+
+# Проверка
+
+http://127.0.0.1:9999/

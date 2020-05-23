@@ -1,0 +1,82 @@
+version: "2"
+
+services:
+
+  api:
+    build: ./api/
+    environment:
+      - NODE_PATH=.
+      - NODE_ENV=production
+      - HOST=
+      - PORT=7777
+      - DB__HOST=db
+      - DB__PORT=5432
+      - DB__USERNAME=postgres
+      - DB__PASSWORD=postgres
+      - DB__DATABASE=test_records
+      - DB__DIALECT=postgres
+    expose:
+      - 7777
+    links:
+      - db
+    depends_on:
+      - db
+
+  front:
+    build: ./front/
+    environment:
+      - NODE_PATH=.
+      - NODE_ENV=production
+      - FORWARD_HOST=127.0.0.1
+      - HOST=
+      - PORT=9999
+      - API_HOST=api
+      - API_PORT=7777
+    ports:
+      - 127.0.0.1:9999:9999
+    links:
+      - api
+    depends_on:
+      - api
+
+  generator:
+    build: ./generator/
+    environment:
+      - NODE_PATH=.
+      - NODE_ENV=production
+      - NATS_SERVER=nats://nats:4222
+    links:
+      - nats
+    depends_on:
+      - nats
+
+  system:
+    build: ./system/
+    environment:
+      - NODE_PATH=.
+      - NODE_ENV=production
+      - NATS_SERVER=nats://nats:4222
+      - DB__HOST=db
+      - DB__PORT=5432
+      - DB__USERNAME=postgres
+      - DB__PASSWORD=postgres
+      - DB__DATABASE=test_records
+      - DB__DIALECT=postgres
+    links:
+      - nats
+    depends_on:
+      - nats
+
+  db:
+    build: ./db/
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=test_records
+    expose:
+      - 5432
+
+  nats:
+    build: ./nats/
+    expose:
+      - 4222

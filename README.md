@@ -13,3 +13,5 @@ $ docker-compose down
 # Проверка
 
 http://127.0.0.1:9999/
+
+![Image](https://i.ibb.co/2MxsFZ1/pic.png)
